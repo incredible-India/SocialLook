@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#^m2wpbteen0#*cl0c#=l4ozt!ca&m^#8kj)^_++a551&x(dha
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*','localhost','sociallook.herokuapp.com']
 
 
 # Application definition
@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
+    'users',
+    'home',
 ]
 
 MIDDLEWARE = [

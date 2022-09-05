@@ -1,0 +1,12 @@
+.title{
+    font-size:45px;
+    letter-spacing: 3px;
+}
+
+.user{
+    
+    border: 2px solid greenyellow;
+    height: 250px;
+    width: 250px;
+    border-radius: 100%;
+}
