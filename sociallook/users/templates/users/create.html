@@ -1,0 +1,102 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %}
+
+<title>Create Account</title>
+{% endblock title %}
+
+
+{% block content %}
+
+{% include 'core/nav.html' %}
+
+
+
+{% if messages %}
+{% for k in messages %} 
+
+<div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+    <strong>{{k}}</strong> You should check in on some of those fields below.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+
+{% endfor %}
+{% endif %}
+
+<div class="mt-2 container">
+
+    <h1 class="display-3">
+
+        <span class="text-success">N</span>ew <Span class="text-success">U</Span>ser
+
+    </h1>
+<hr class="text-success">
+</div>
+
+
+<div class="mt-2 container">
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    <div class="row">
+        
+        
+
+            <div class="col-sm-6 alert alert-success">
+
+                <input type="text" name="name" class="form-control mt-2" placeholder="Full Name" required>
+
+                <input type="password" name="password" class="form-control mt-2" placeholder="Password" required>
+
+
+                <select name="gender" class="form-control mt-2" placeholder="Gender" required>
+
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="transgender">Transgender</option>
+
+
+                </select>
+
+                <label for="img" class="mt-2">User Image</label>
+                <input type="file" name="img" class="form-control" id="img" placeholder="image">
+
+
+
+
+
+            </div>
+
+            <div class="col-sm-6 alert alert-success">
+
+                    <input type="email" name="email" class="form-control mt-2" placeholder="Email Address" required>
+
+                    <textarea name="address"  cols="30" rows="10" class="form-control mt-2" placeholder="address"></textarea>
+
+                    <input type="submit" value="Submit" class="btn btn-success mt-2">
+
+
+            </div>
+
+          
+
+
+     
+
+
+    </div>
+
+
+    <div class="container mt-2">
+      
+        <a href='{% url 'login' %}'  class="btn btn-warning mt-2">Already Have A Account</a>
+    </div>
+</form>
+
+
+</div>
+
+
+{% include 'core/footer.html' %}
+{% endblock content %}

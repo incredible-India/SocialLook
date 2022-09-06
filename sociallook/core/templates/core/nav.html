@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-success" >
-    <a class="navbar-brand" href="#"><i class="fa-solid fa-book-atlas text-light"></i> <span class="text-light">BookMarks</span> </a>
+    <a class="navbar-brand" href="/"><i class="fa-solid fa-book-atlas text-light"></i> <span class="text-light">BookMarks</span> </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -8,7 +8,19 @@
         <a class="nav-item nav-link active" href="#"> <i class="fas fa-cog"></i> Dashboard</a>
         <a class="nav-item nav-link active" href="#"> <i class="fas fa-image"></i> Pictures</a>
         <a class="nav-item nav-link active" href="#"><i class="fas fa-users"></i> People</a>
-        <a class="nav-item nav-link active " href="#"><i class="fas fa-user"></i> User</a>
+        {% if username %}
+
+
+        <a class="nav-item nav-link active " href="/"><i class="fas fa-user"></i> {{username | capfirst}}</a>
+
+        <a class="nav-item nav-link active" href="{% url 'logout' %}"><i class="fa fa-sign-out"></i>Logout</a>
+{% else %}
+        <a class="nav-item nav-link active " href="/"><i class="fas fa-user"></i> User</a>
+        <a class="nav-item nav-link active" href="{% url 'login' %}"><i class="fa fa-sign-in"></i>Login</a>
+ 
+
+{% endif %}
+
       </div>
     </div>
   </nav>
