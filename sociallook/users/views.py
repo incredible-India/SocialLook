@@ -106,3 +106,68 @@ class login(View):
 
 
 
+#forgot password
+
+class forgotpassword(View):
+    @method_decorator(checkingUserAuthentication)
+    def get(self, request):
+        if(request.isauth):
+            return HttpResponseRedirect('/')
+        
+        else:
+            askemail= True
+            return render(request,'users/password.html',{'askemail':askemail})
+    
+
+    def post(self, request):
+        email = request.POST.get('email')
+        gender = request.POST.get('gender')
+
+        isverify = users.objects.filter(Q(email = email) & Q(gender = gender))
+
+        if(len(isverify) == 1):
+            askemail= False
+            return render(request,'users/password.html',{'askemail':askemail, 'email':email}) #this will show the page for  creating new password
+        else:
+            messages.error(request,'Invalid Credentials')
+            return HttpResponseRedirect('/user/forgotpassword/')
+
+
+
+
+class newpassword(View):
+   
+    def post(self, request,email):
+
+        password = request.POST.get('password')
+        cnfpassword = request.POST.get('cnfpassword')
+
+        askemail = False
+
+        if (password == cnfpassword):
+            Email = email 
+            users.objects.filter(email=Email).update(password=password)
+            messages.success(request,'Password has Been Changed...')
+            return HttpResponseRedirect('/user/login')
+        else:
+            messages.error(request,'Password does not matched with cnf password')
+            return render(request,'users/password.html',{'askemail':askemail})
+
+
+
+
+#for the profile page and
+
+class dashboard(View):
+    @method_decorator(checkingUserAuthentication)
+    def get(self, request):
+        if (request.isauth):
+            username = request.name
+
+            user = users.objects.filter(email = request.email)
+
+
+            return render(request,'users/dashboard.html',{'username':username,'user':user})
+        
+        else:
+            return HttpResponseRedirect('/user/login/')
