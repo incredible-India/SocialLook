@@ -10,7 +10,13 @@ urlpatterns = [
 
     #for dashboard in views.dashboards
 
-    path('dashboard/',views.dashboard.as_view(),name='profile')
+    path('dashboard/',views.dashboard.as_view(),name='profile'),
+
+
+    #for editing userinformation
+    path('editinfo/<int:id>/',views.editinfo.as_view(),name='editinfo'),
+    path('editimage/<int:id>/',views.editimg.as_view(),name='editimage'),
+    path('removeImage/<int:id>/',views.rmvimg.as_view(),name='rmvpic'),
 
 ]
 

@@ -24,10 +24,17 @@ class newuser(View):
         password = request.POST.get('password')
         gender = request.POST.get('gender')
         address = request.POST.get('address')
-        if 'is_private' in request.POST:
+        #img tag nam attr wala hai input tag ka <imput name=img type=file>
+        if 'img' in request.FILES:
             userimg = request.FILES['img']
         else:
             userimg = False
+
+
+      
+       
+        
+
         
    
 
@@ -171,3 +178,122 @@ class dashboard(View):
         
         else:
             return HttpResponseRedirect('/user/login/')
+
+
+
+#for editing the information about
+
+class editinfo(View):
+    
+    def get(self, request,id):
+        if 'email' in request.session:
+            user = users.objects.get(id=id)
+
+            if user.email == request.email:
+                return render(request,'users/edit.html',{'username':request.name,'user':user})
+            else:
+                return HttpResponse('Invalid request')
+
+            
+        else:
+            return HttpResponseRedirect('/user/login')
+
+    
+    def post(self, request,id):
+        
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        gender = request.POST.get('gender')
+        password = request.POST.get('password')
+
+        if len(name) <= 2:
+            messages.info(request,'Name is too short')
+            return HttpResponseRedirect(f'/user/editinfo/{id}/')
+        else:
+            newName = name
+            users.objects.filter(id=id).update(name=newName)
+            request.session['name'] = newName
+        
+        #checking email
+        
+        if request.session['email'] != email:
+            user = users.objects.filter(email = email)
+
+            if(len(user) >= 1):
+                messages.info(request,'Email Already Exist')
+                return HttpResponseRedirect(f'/user/editinfo/{id}')
+            else:
+                newEmail = email
+                users.objects.filter(id=id).update(email=newEmail)
+                request.session['email'] = email
+               
+        else:
+            pass
+            
+            
+
+        
+        if password == "":
+            pass
+        else:
+            if len(password) < 3:
+                messages.info(request,'Password is too small')
+                return HttpResponseRedirect(f'/user/editinfo/{id}')
+            else:
+                users.objects.filter(id=id).update(password=password)
+
+        
+        users.objects.filter(id=id).update(gender = gender,address = address)
+
+        return HttpResponseRedirect(f'/user/dashboard/')
+
+
+
+
+class editimg(View):
+    def get(self, request,id):
+        user = users.objects.get(id=id)
+
+        if user.email == request.session['email']:
+            return render(request,'users/editpic.html',{'username':user.name,'user':user})
+        else:
+            return HttpResponseRedirect(f'/user/login')
+    
+    def post(self, request,id):
+        user = users.objects.get(id=id)
+
+        if user.email == request.session['email']:
+
+            userimage = request.FILES['img']
+
+
+            userimg = 'userimg/'+ str(userimage)
+
+           
+            users.objects.filter(id=id).update( userimg =  userimg)
+
+            return HttpResponseRedirect('/user/dashboard/')
+        else:
+            return HttpResponseRedirect(f'/user/login')
+
+
+
+
+
+#remove image and set default image provide by bookmarks
+
+class rmvimg(View):
+    def get(self, request,id):
+        user = users.objects.get(id=id)
+
+        if user.email == request.session['email']:
+
+            users.objects.filter(id=id).update( userimg = False)
+           
+            return HttpResponseRedirect('/user/dashboard/')
+        else:
+            return HttpResponseRedirect(f'/user/login')
+
+        
+

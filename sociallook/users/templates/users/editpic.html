@@ -1,0 +1,86 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+{% block title %}
+
+<title>Edit Image</title>
+{% endblock title %}
+
+
+{% block content %}
+
+{% include 'core/nav.html' with p=username%}
+
+<div class="container mt-2">
+
+    <h1 class="display-4">
+        <span class="text-success">E</span>dit <span class="text-success">I</span>mage 
+
+        <hr class="text-success">
+    </h1>
+</div>
+
+
+<div class="mt-2 container alert alert-info">
+
+    <p>
+        <b>Remove Profile Picture : this will set default image provided by BookMarks..(example is given below)</b>
+    </p>
+
+    <img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 250px; height: 250px; ">
+
+    <br>
+
+    <a class="mt-2 btn btn-primary" href="{% url 'rmvpic' id=user.id %}">Remove Profile Picture
+
+    </a>
+
+</div>
+
+
+<div class="mt-2 container alert alert-success">
+
+    <p>
+        <b>
+            You can chnage your profile picture here. 
+
+        </b>
+    </p>
+
+
+
+    {% if user.userimg == 'False' %}
+
+<img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 250px; height: 250px; " class='img-fluid userimg'>  <br>
+
+(Your current profile picture .)
+
+
+
+
+{% else %}
+
+<img src="{{ user.userimg.url }}" alt="" class="img-fluid text-center userimg" style="width: 250px; height: 250px; ">
+
+{% endif %}
+
+    <form action="" method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        <input type="file" name="img" class="form-control mt-2" id="img" placeholder="image" required>
+
+        <input type="submit" value="Change Picture" class='mt-2 btn btn-info'>
+
+
+
+    </form>
+
+</div>
+
+
+{% include 'core/footer.html' %}
+
+
+
+{% endblock content %}

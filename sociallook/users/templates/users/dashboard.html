@@ -62,7 +62,9 @@
 
 <div class="text-center container mt-2">
 
-    <a href="" class="btn btn-outline-success">Edit Information <i class="fas fa-edit"></i></a>
+    <a href="{% url 'editinfo' id=i.id %}" class="btn btn-outline-success">Edit Information <i class="fas fa-edit"></i></a>
+    <a href="{% url 'editimage' id=i.id %}" class="btn btn-outline-primary">Edit Profile Picture <i class="fas fa-image"></i></a>
+
 </div>
 </div>
 
@@ -73,5 +75,8 @@
 
 <h1 class="text-success text-center">Something Wrong happened !!!!</h1>
 {% endif %}
+
+
+{% include 'core/footer.html' %}
 
 {% endblock content %}
