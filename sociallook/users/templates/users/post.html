@@ -1,0 +1,132 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %}
+
+<title>Post</title>
+{% endblock title %}
+
+{% block content %}
+
+{% include 'core/nav.html' with p=username %}
+
+
+{% if messages %}
+{% for k in messages %} 
+
+<div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+    <strong>{{k}}</strong> You should check in on some of those fields below.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+
+{% endfor %}
+{% endif %}
+
+<div class="container mt-2">
+
+    <h1 class="display-4">
+        <span class="text-success">P</span>ost Something
+        <hr class="text-success">
+    </h1>
+
+    <div class="container mt-2 alert alert-success">
+
+        <form action="" method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            <textarea name="postdata" id="post" cols="30" rows="10" class='mt-2 form-control' placeholder="Write something" required></textarea>
+
+            <input type="file" name="postimg" id="postimg" class="mt-2 form-control"> 
+            <br>
+
+            <input type="submit" value="Post" class="mt-2 btn btn-primary">
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="container mt-2">
+    <h1 class="display-4">
+        <span class="text-success">Y</span>our  <span class="text-success">P</span>osts 
+
+       
+
+    </h1>
+    {% if post %}
+    Total : {{total}}
+    {% else %}
+    Total : 0
+    {% endif %}
+
+    <hr class="text-success">
+</div>
+
+
+<div class="container mt-2">
+    {% if post %}
+    
+
+    <div class="container mt-2">
+
+      
+        <div class="row">
+       {% for i in post %}
+      
+
+        <div class="col-sm-6 " >
+
+            {% if i.postimg != 'False' %}
+
+   
+       <img src="{{ i.postimg.url }}" alt="" class="img-fluid text-center" style="width: 250px; height: 250px; ">
+
+       
+
+         {% endif %}
+
+            <p><b>
+                {{i.postdata}}
+            </b></p>
+
+            <p class="text-secondary">
+                <em>
+                    {{i.dateofpost}}
+                </em>
+            </p>
+
+
+            <div class="container mt-2">
+                <a href="{% url 'deletethispost' id=i.id %}" class="text-danger">Delete Post</a>
+            </div>
+            <hr class="text-success">
+
+        </div>
+
+        
+
+   
+       {% endfor %}
+
+    </div>
+
+    </div>
+
+    
+    {% else %}
+    <p>
+        <b>No post yet..</b>
+    </p>
+    {% endif %}
+
+   
+
+
+
+</div>
+
+
+{% include 'core/footer.html' %}
+{% endblock content %}

@@ -18,5 +18,17 @@ urlpatterns = [
     path('editimage/<int:id>/',views.editimg.as_view(),name='editimage'),
     path('removeImage/<int:id>/',views.rmvimg.as_view(),name='rmvpic'),
 
+
+    #delete this post from
+
+    path('/deletethispost/<int:id>',views.deleteethispost.as_view(),name='deletethispost'),
+
+    #for the showing all the post
+    path('post/',views.post.as_view(),name='post'),
+
+    #for the people posting
+
+    path('people/',views.people.as_view(),name='people'),
+
 ]
 

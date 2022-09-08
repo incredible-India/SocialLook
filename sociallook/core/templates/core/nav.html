@@ -6,8 +6,8 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link active" href="{% url 'profile' %}"> <i class="fas fa-cog"></i> Dashboard</a>
-        <a class="nav-item nav-link active" href="#"> <i class="fas fa-image"></i> Pictures</a>
-        <a class="nav-item nav-link active" href="#"><i class="fas fa-users"></i> People</a>
+        <a class="nav-item nav-link active" href="{% url 'post' %}"> <i class="fas fa-image"></i> Post</a>
+        <a class="nav-item nav-link active" href="{% url 'people' %}"><i class="fas fa-users"></i> People</a>
         {% if username %}
 
 

@@ -1,0 +1,134 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+{% block title %}
+
+<title>People</title>
+
+{% endblock title %}
+
+
+{% block content %}
+
+
+{% include 'core/nav.html' with p=username %}
+
+
+{% if people %}
+
+
+
+<div class="container mt-2">
+
+    <div class="row">
+        <div class="col-sm-8">
+
+        {% for i in people %}
+        
+            {% if len != 1  %}
+            
+           {% if i.name != username %}
+           
+           
+           <div class="container mt-2">
+
+            <div class="row">
+
+                <div class="col-sm-6">
+                    {% if i.userimg == 'False' %}
+
+         <img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 250px; height: 250px; ">
+
+
+ {% else %}
+
+   <img src="{{ i.userimg.url }}" alt="" class="img-fluid text-center" style="width: 250px; height: 250px; ">
+
+{% endif %}
+                </div>
+
+                <div class="col-sm-6">
+                    <h4 class="display-5 text-success">{{i.name | capfirst}}</h4>
+
+                    <p>
+                        <em>{{i.address | capfirst}}</em>
+                    </p>
+
+                    <p>
+                        <b>{{i.gender | capfirst}}</b>
+                    </p>
+
+                    <br>
+                    <a href="" class="btn-success btn">Follow <i class="fas fa-plus"></i> </a>
+                </div>
+            </div>
+
+
+
+
+        </div>
+           
+       
+
+           {% endif %}
+
+            {% else %}
+
+            <div class="container mt-2">
+
+                <img src="{% static 'users/img/p.svg' %}" alt="" class="img-fluid">
+            
+                <div class="mt-2">
+            
+                    <h1 class="display-4">
+                        <span class="text-success">No</span> People Here..
+                    </h1>
+            
+                </div>
+            
+            </div>
+      
+
+            {% endif %}
+
+          
+            
+
+        {% endfor %}
+
+       
+
+    </div>
+       
+
+       
+    </div>
+
+</div>
+
+
+
+{% else %}
+
+
+
+<div class="container mt-2">
+
+    <img src="{% static 'users/img/p.svg' %}" alt="" class="img-fluid">
+
+    <div class="mt-2">
+
+        <h1 class="display-4">
+            <span class="text-success">No</span> People Here..
+        </h1>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+{% include 'core/footer.html' %}
+
+{% endblock content %}

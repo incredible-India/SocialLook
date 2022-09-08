@@ -12,3 +12,11 @@ class users(models.Model):
     gender = models.CharField(max_length=20,choices=GENDER_CHOICES,default='male')
     userimg = models.ImageField(upload_to='userimg/' ,null=True)
     
+
+
+
+class posts(models.Model):
+    user = models.ForeignKey(users,on_delete=models.CASCADE)
+    postdata = models.TextField(blank=True)
+    postimg = models.ImageField(upload_to='postimg/',null=True)
+    dateofpost = models.DateTimeField(auto_now_add=True,blank=True)

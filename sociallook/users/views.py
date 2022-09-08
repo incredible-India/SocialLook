@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views import View
 from django.shortcuts import HttpResponse,HttpResponseRedirect
 from django.contrib import messages
-from .models import users
+from .models import users,posts
 from django.utils.decorators import method_decorator
 from .middleware  import checkingUserAuthentication
 # Create your views here.
@@ -173,8 +173,9 @@ class dashboard(View):
 
             user = users.objects.filter(email = request.email)
 
+            mypost = posts.objects.filter(user=users.objects.get(email=request.email))
 
-            return render(request,'users/dashboard.html',{'username':username,'user':user})
+            return render(request,'users/dashboard.html',{'username':username,'user':user,'total' : len(mypost)})
         
         else:
             return HttpResponseRedirect('/user/login/')
@@ -297,3 +298,82 @@ class rmvimg(View):
 
         
 
+
+
+#post users.objects.
+
+class post(View):
+    @method_decorator(checkingUserAuthentication)
+    def get(self, request):
+        if request.isauth:
+
+            mypost = posts.objects.filter(user=users.objects.get(email=request.email))
+
+
+
+            return render(request, 'users/post.html',{
+                'username' : request.name,
+                'post' : mypost,
+                'total' : len(mypost)
+            }) 
+        else:
+            return HttpResponseRedirect('/user/login')
+    
+    def post(self, request):
+
+        postdata = request.POST.get('postdata')
+        
+        
+        if 'postimg' in request.FILES:
+            img = request.FILES['postimg']
+        else:
+            img = False
+      
+
+       
+        if postdata == '':
+            messages.info(request,'Please write something in the text box ')
+            return HttpResponseRedirect('/user/post/')
+        else:
+            
+            posts.objects.create(postdata=postdata,postimg=img,user=users.objects.get(email=request.email))
+
+            return HttpResponseRedirect('/user/post/')
+
+
+
+
+#for the deleteing post data
+class deleteethispost(View):
+    
+    def get(self, request,id):
+        if 'email' in request.session:
+            email = request.session['email']
+
+            isexist  = users.objects.filter(email=email).exists()
+
+            if isexist:
+                posts.objects.get(id=id).delete()
+                return HttpResponseRedirect('/user/post/')
+            else:
+                return HttpResponse('Invalid Request')
+
+        else:
+            return HttpResponseRedirect('/user/login')
+
+
+
+
+#for the follwing person who
+
+
+class people(View):
+    @method_decorator(checkingUserAuthentication)
+    def get(self, request):
+        if request.isauth:
+            people = users.objects.all()
+
+            return render(request,'users/people.html',{'people':people ,'username':request.name,
+            'len' : len(people)})
+        else:
+            return HttpResponseRedirect('/user/login/')
