@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+{% block title %}
+
+<title>Follow List</title>
+{% endblock title %}
+
+
+{% block content %}
+
+{% include 'core/nav.html' %} 
+
+{% if follower %}
+
+
+<div class="container mt-2">
+
+    <h1 class="display-4 container mt-2">
+        <span class="text-success">Followers {{len}}</span>
+    </h1>
+<hr class="text-success">
+    <div class="row">
+
+{% for i in follower %}
+
+
+
+
+        <div class="col-sm-6">
+            {% if i.whofollow.userimg == 'False' %}
+
+<img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 250px; height: 250px; ">
+
+
+{% else %}
+
+<img src="{{ i.whofollow.userimg.url }}" alt="" class="img-fluid text-center" style="width: 250px; height: 250px; ">
+
+{% endif %}
+        </div>
+
+        <div class="col-sm-6">
+            <h4 class="display-5 text-success">
+
+                <a href="{% url 'showprofile' id=i.whofollow.id %}" class='text-success'>{{i.whofollow.name | capfirst}}</a>
+
+            </h4>
+
+            <p>
+                <em>{{i.whofollow.address | capfirst}}</em>
+            </p>
+
+            <p>
+                <b>{{i.whofollow.gender | capfirst}}</b>
+            </p>
+
+            <br>
+
+
+</div>
+
+<hr class="text-success mt-2">
+       
+
+{% endfor %}
+
+</div>
+</div>
+
+{% else %}
+
+
+
+<h1 class="display-4 container mt-2">
+    <span class="text-success">Followers (0)</span>
+</h1>
+<br>
+<div class="container mt-2">
+  
+
+<br>
+<img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 250px; height: 250px; " class="img-fluid container mt-2">
+
+</div>
+
+
+{% endif %}
+
+
+
+{% include 'core/footer.html' %}
+
+{% endblock content %}

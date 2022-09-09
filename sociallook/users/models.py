@@ -20,3 +20,10 @@ class posts(models.Model):
     postdata = models.TextField(blank=True)
     postimg = models.ImageField(upload_to='postimg/',null=True)
     dateofpost = models.DateTimeField(auto_now_add=True,blank=True)
+
+
+
+class activity(models.Model):
+    whofollow = models.ForeignKey(users,on_delete=models.CASCADE,related_name='follow')
+    whomtofollow = models.ForeignKey(users,on_delete=models.CASCADE,related_name='follower')
+    dateoffollow = models.DateTimeField(auto_now_add=True,blank=True)

@@ -36,8 +36,8 @@
 
                 <div class="col-sm-6">
                     {% if i.userimg == 'False' %}
-
-         <img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 250px; height: 250px; ">
+ 
+        <img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 250px; height: 250px; ">
 
 
  {% else %}
@@ -48,7 +48,11 @@
                 </div>
 
                 <div class="col-sm-6">
-                    <h4 class="display-5 text-success">{{i.name | capfirst}}</h4>
+                    <h4 class="display-5 text-success">
+
+                        <a href="{% url 'showprofile' id=i.id %}" class='text-success'>{{i.name | capfirst}}</a>
+
+                    </h4>
 
                     <p>
                         <em>{{i.address | capfirst}}</em>
@@ -59,7 +63,26 @@
                     </p>
 
                     <br>
-                    <a href="" class="btn-success btn">Follow <i class="fas fa-plus"></i> </a>
+ 
+                  
+                    {% for k in act %}
+                    
+                    {% if k.whomtofollow.id == i.id %}
+                    
+                     <p class="text-success"><b>Following</b></p>
+                    <a href="{% url 'unfollow' id=k.whomtofollow.id %}" class="btn-success btn">Unfollow <i class="fa fa-undo" aria-hidden="true"></i> </a> 
+                    
+                    {% endif %}
+                    {% endfor %}
+                
+                   
+
+                   
+
+                    <a href="{% url 'follow' id=i.id %}" class="btn-success btn">Follow <i class="fas fa-plus"></i> </a>
+                 
+             
+
                 </div>
             </div>
 

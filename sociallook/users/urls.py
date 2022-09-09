@@ -21,7 +21,7 @@ urlpatterns = [
 
     #delete this post from
 
-    path('/deletethispost/<int:id>',views.deleteethispost.as_view(),name='deletethispost'),
+    path('deletethispost/<int:id>/',views.deleteethispost.as_view(),name='deletethispost'),
 
     #for the showing all the post
     path('post/',views.post.as_view(),name='post'),
@@ -29,6 +29,21 @@ urlpatterns = [
     #for the people posting
 
     path('people/',views.people.as_view(),name='people'),
+
+    #showing the profile page and
+
+    path('showprofile/<int:id>/',views.profile.as_view(),name='showprofile'),
+
+
+    #follower,
+    path('follow/<int:id>/',views.follow.as_view(),name='follow'),
+    path('unfollow/<int:id>/',views.unfollow.as_view(),name='unfollow'),
+
+
+    #see the follow list below
+
+    path('followlist/',views.followlist.as_view(),name='followlist'),
+    path('followerlist/',views.followerlist.as_view(),name='followerlist')
 
 ]
 

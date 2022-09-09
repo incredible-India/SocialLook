@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views import View
 from django.shortcuts import HttpResponse,HttpResponseRedirect
 from django.contrib import messages
-from .models import users,posts
+from .models import users,posts,activity
 from django.utils.decorators import method_decorator
 from .middleware  import checkingUserAuthentication
 # Create your views here.
@@ -175,7 +175,11 @@ class dashboard(View):
 
             mypost = posts.objects.filter(user=users.objects.get(email=request.email))
 
-            return render(request,'users/dashboard.html',{'username':username,'user':user,'total' : len(mypost)})
+            follow = activity.objects.filter(whofollow= users.objects.get(email=request.email))
+
+            followers= activity.objects.filter(whomtofollow= users.objects.get(email=request.email))
+
+            return render(request,'users/dashboard.html',{'username':username,'user':user,'total' : len(mypost),'follow' : len(follow),'followers':len(followers)})
         
         else:
             return HttpResponseRedirect('/user/login/')
@@ -371,9 +375,164 @@ class people(View):
     @method_decorator(checkingUserAuthentication)
     def get(self, request):
         if request.isauth:
-            people = users.objects.all()
+            people = users.objects.all() 
 
+            #now we will send for the followers list and
+
+            act = activity.objects.filter(whofollow = users.objects.get(email=request.email))
+            
             return render(request,'users/people.html',{'people':people ,'username':request.name,
-            'len' : len(people)})
+            'len' : len(people),'act':act})
         else:
             return HttpResponseRedirect('/user/login/')
+
+
+
+
+#for showinf the individuals profile page
+
+class profile(View):
+    def get(self, request,id):
+
+        if 'email' in request.session:
+            isexist = users.objects.filter(email = request.session['email']).exists()
+            if isexist:
+                username = request.session['name']
+
+                isfollow = activity.objects.filter(Q(whofollow= users.objects.get(email= request.session['email'])) & Q(whomtofollow= users.objects.get(id=id))).exists()
+
+                
+            else:
+                username = False
+                isfollow = False
+
+        else:
+            username = False
+            isfollow = False
+
+        
+        isUser = users.objects.filter(id=id).exists()
+
+        if isUser:
+
+            user = users.objects.filter(id=id)
+            totalpost = posts.objects.filter(user = users.objects.get(id=id))
+            totalfollowing = len(activity.objects.filter(whofollow= users.objects.get(id=id)))
+            totalfollower = len(activity.objects.filter(whomtofollow=users.objects.get(id=id)))
+
+
+            #to check weather the loged in user follow this guy or not 
+
+
+
+            return render(request, 'users/profile.html',{'username':username,'user':user,'total' :len(totalpost),'totalfollowing':totalfollowing,'totalfollower':totalfollower,'id':id,'isfollow':isfollow,
+            'post':totalpost})
+            
+        else:
+            return HttpResponse('Invalid Request..')
+
+        
+        
+
+#follow user
+
+class follow(View):
+    def get(self, request,id):
+        #first we need to follow
+        if 'email' in request.session:
+            if 'name' in request.session:
+                isexist = users.objects.filter(Q(email = request.session['email']) & Q(name = request.session['name'])).exists()
+
+                if isexist:
+
+                    #if user is aurthorised then we need to follower id is exist or not exist
+
+                    sameperson = users.objects.filter(Q(id=id) & Q(email = request.session['email']) & Q(name = request.session['name'])).exists()
+
+                    if sameperson:
+                        return HttpResponse('Cannot follow yourself..')
+
+                    isPerson = users.objects.filter(id=id).exists() 
+                    
+                
+                    if isPerson:
+
+                        #now we will check user is alredy follow or not 
+                        
+                        isfollow = activity.objects.filter(Q(whomtofollow = users.objects.get(id=id)) & Q(whofollow = users.objects.get(email = request.session['email']))).exists()
+
+                        if isfollow:
+                            return HttpResponse('You are alredy following this users..')
+                        
+                        else:
+
+                            activity.objects.create(whofollow=users.objects.get(email = request.session['email']),whomtofollow = users.objects.get(id=id)) 
+
+                            return HttpResponseRedirect('/user/people/')
+
+
+                    else:
+                        return HttpResponse('User does not exist or deleted the account..')
+
+                  
+                else:
+                    return HttpResponseRedirect('/user/login')
+
+            
+            else:
+                return HttpResponseRedirect('/user/login')
+
+        else:
+            return HttpResponseRedirect('/user/login')
+
+
+
+
+#for unfollow user
+
+class unfollow(View):
+    def get(self, request, id):
+        if 'email' in request.session:
+            if 'name' in request.session:
+                isexist = activity.objects.filter(Q(whomtofollow= users.objects.get(id=id)) & Q(whofollow= users.objects.get(email= request.session['email']))).exists()
+
+                if isexist:
+                    activity.objects.filter(Q(whomtofollow= users.objects.get(id=id)) & Q(whofollow= users.objects.get(email= request.session['email']))).delete()
+                    return HttpResponseRedirect('/user/people/')
+                else:
+                    return HttpResponse('User does not exsist')
+            else:
+                return HttpResponseRedirect('/user/login')
+        else:
+            return HttpResponseRedirect('/user/login')
+        
+
+#see the followlist for more information
+
+class followlist(View):
+    @method_decorator(checkingUserAuthentication)
+    def get(self,request):
+        if request.isauth:
+            follow = activity.objects.filter(whofollow= users.objects.get(email=request.email))
+            return render(request, 'users/follow.html',{
+                'username': request.name
+                ,'follow': follow,
+                'len' : len(follow)
+            })
+        else:
+            return HttpResponseRedirect('/user/login')
+
+
+
+class followerlist(View):
+    @method_decorator(checkingUserAuthentication)
+    def get(self,request):
+        if request.isauth:
+            follower = activity.objects.filter(whomtofollow= users.objects.get(email=request.email))
+            return render(request, 'users/follower.html',{
+                'username': request.name
+                ,'follower': follower,
+                'len' : len(follower)
+            })
+        else:
+            return HttpResponseRedirect('/user/login')

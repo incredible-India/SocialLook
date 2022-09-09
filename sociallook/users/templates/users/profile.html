@@ -1,0 +1,196 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}
+<title>Profile</title>
+{% endblock title %}
+
+{% block content %}
+
+{% include 'core/nav.html' %}
+
+{% if user %}
+
+
+{% for i in user  %}
+
+<div class="container mt-2 text-center">
+
+
+{% if i.userimg == 'False' %}
+
+<img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 250px; height: 250px; ">
+
+{% else %}
+
+<img src="{{ i.userimg.url }}" alt="" class="img-fluid text-center" style="width: 250px; height: 250px; ">
+
+{% endif %}
+</div>
+
+
+<div class="container text-center">
+    <h3 class="text-success text-center display-4" id='name'>{{i.name | capfirst}}</h3>
+
+    <p><b  class='mx-2'>Following  : {{totalfollowing}}</b> <b class='mx-2'>Followers : {{totalfollower}}</b> <b class='mx-2'> <a href="" class="text-dark">Posts : {{total}}</a> </b> </p>
+
+<hr class="text-success">
+
+
+<div class="row">
+    <div class="col-sm-6 alert alert-light">
+   
+
+    <p><b>{{i.gender | capfirst}}</b></p>
+    </div>
+
+    <div class="col-sm-6 alert alert-success">
+        <p>
+            <b>
+                {{i.address}}
+            </b>
+        </p>
+    </div>
+</div>
+
+<div class="text-center container mt-2">
+
+
+</div>
+</div>
+
+{% endfor %}
+
+
+
+
+{% comment %} post   {% endcomment %}
+{% if isfollow %}
+
+
+<div class="container mt-2 text-center">
+    <a href="{% url 'unfollow' id=id %}" class="btn-success btn">Unfollow <i class="fa fa-undo" aria-hidden="true"></i> </a> 
+
+</div>
+
+<hr class="text-success">
+
+<div class="container mt-2">
+    <h1 class="display-4 pp">
+       
+
+       
+
+    </h1>
+    {% if post %}
+    Total : {{total}}
+    {% else %}
+    Total : 0
+    {% endif %}
+
+    <hr class="text-success">
+</div>
+
+
+<div class="container mt-2">
+    {% if post %}
+    
+
+    <div class="container mt-2">
+
+      
+        <div class="row">
+       {% for i in post %}
+      
+
+        <div class="col-sm-6 " >
+
+            {% if i.postimg != 'False' %}
+
+   
+       <img src="{{ i.postimg.url }}" alt="" class="img-fluid text-center" style="width: 250px; height: 250px; ">
+
+       
+
+         {% endif %}
+
+            <p><b>
+                {{i.postdata}}
+            </b></p>
+
+            <p class="text-secondary">
+                <em>
+                    {{i.dateofpost}}
+                </em>
+            </p>
+
+
+           
+            <hr class="text-success">
+
+        </div>
+
+        
+
+   
+       {% endfor %}
+
+    </div>
+
+    </div>
+
+    
+    {% else %}
+    <p>
+        <b>No post yet..</b>
+    </p>
+    {% endif %}
+
+   
+
+
+
+</div>
+
+{% else %}
+
+<div class="container mt-2">
+
+    <p class='text-center'><b class="insert ">Follow  to see the posts.</b></p><br>
+
+    <div class="text-center container mt-2">
+        <a href="{% url 'follow' id=id %}" class="btn-success btn mt-2 ">Follow <i class="fas fa-plus"></i> </a>
+
+    </div>
+
+
+
+</div>
+
+{% endif %}
+
+{% comment %} /////////////   {% endcomment %}
+
+
+
+
+{% else %}
+
+<h1 class="text-success text-center">Something Wrong  !!!!</h1>
+{% endif %}
+
+
+<script>
+    try {
+
+        document.getElementsByClassName("insert")[0].innerText = `Follow ${document.getElementById('name').innerText} to see the posts.`;
+ 
+
+    }catch(e){
+        document.getElementsByClassName("pp")[0].innerHTML = ` <span class="text-success">${document.getElementById('name').innerText}</span>'s <span class="text-dark">Posts</span>`;
+    }
+
+
+</script>
+
+{% endblock content %}
+

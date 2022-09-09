@@ -1,0 +1,97 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+{% block title %}
+
+<title>Follow List</title>
+{% endblock title %}
+
+
+{% block content %}
+
+{% include 'core/nav.html' %} 
+
+{% if follow %}
+
+
+<div class="container mt-2">
+
+    <h1 class="display-4 container mt-2">
+        <span class="text-success">Following {{len}}</span>
+    </h1>
+<hr class="text-success">
+    <div class="row">
+
+{% for i in follow %}
+
+
+
+
+        <div class="col-sm-6">
+            {% if i.whomtofollow.userimg == 'False' %}
+
+<img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 250px; height: 250px; ">
+
+
+{% else %}
+
+<img src="{{ i.whomtofollow.userimg.url }}" alt="" class="img-fluid text-center" style="width: 250px; height: 250px; ">
+
+{% endif %}
+        </div>
+
+        <div class="col-sm-6">
+            <h4 class="display-5 text-success">
+
+                <a href="{% url 'showprofile' id=i.whomtofollow.id %}" class='text-success'>{{i.whomtofollow.name | capfirst}}</a>
+
+            </h4>
+
+            <p>
+                <em>{{i.whomtofollow.address | capfirst}}</em>
+            </p>
+
+            <p>
+                <b>{{i.whomtofollow.gender | capfirst}}</b>
+            </p>
+
+            <br>
+            <a href="{% url 'unfollow' id=i.whomtofollow.id %}" class="btn-success btn">Unfollow <i class="fa fa-undo" aria-hidden="true"></i> </a> 
+
+
+</div>
+
+<hr class="text-success mt-2">
+       
+
+{% endfor %}
+
+</div>
+</div>
+
+{% else %}
+
+
+
+<h1 class="display-4 container mt-2">
+    <span class="text-success">Followed (0)</span>
+</h1>
+<br>
+<div class="container mt-2">
+    <a href="{% url 'people' %}" class="btn btn-success">Start Following</a>
+
+<br>
+<img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 250px; height: 250px; " class="img-fluid container mt-2">
+
+</div>
+
+
+{% endif %}
+
+<div class="container mt-2">
+    <a href="{% url 'people' %}" class="btn btn-success mt-2">Follow More</a>
+</div>
+
+{% include 'core/footer.html' %}
+
+{% endblock content %}
