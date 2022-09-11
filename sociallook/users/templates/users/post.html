@@ -100,6 +100,8 @@
 
             <div class="container mt-2">
                 <a href="{% url 'deletethispost' id=i.id %}" class="text-danger">Delete Post</a>
+<br>
+                <a href="{% url 'postact' id=i.id  uid=i.user.id %}" class="text-success"> Post Acttvity</a>
             </div>
             <hr class="text-success">
 

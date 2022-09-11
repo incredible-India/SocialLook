@@ -27,3 +27,12 @@ class activity(models.Model):
     whofollow = models.ForeignKey(users,on_delete=models.CASCADE,related_name='follow')
     whomtofollow = models.ForeignKey(users,on_delete=models.CASCADE,related_name='follower')
     dateoffollow = models.DateTimeField(auto_now_add=True,blank=True)
+
+
+
+class post_activities(models.Model):
+    user = models.ForeignKey(users,on_delete=models.CASCADE)
+    post = models.ForeignKey(posts,on_delete=models.CASCADE)
+   
+    comments = models.TextField()
+    dateofpostactivity = models.DateTimeField(auto_now_add=True,blank=True)

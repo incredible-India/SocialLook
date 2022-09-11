@@ -1,0 +1,143 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}
+
+<title>
+    Post Activity
+</title>
+{% endblock title %}
+
+
+{% block content %}
+
+{% include 'core/nav.html' with p=username %}
+
+
+
+
+{% if messages %}
+{% for k in messages %} 
+
+<div class="alert alert-info alert-dismissible fade show mt-2" role="alert">
+    <strong>{{k}}</strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+
+{% endfor %}
+{% endif %}
+
+
+
+{% if post %}
+
+
+{% if isfollow %}
+
+
+{% for i in post %}
+
+
+<div class="container mt-2" style='border: 1px solid black'>
+
+    <p><b>
+        
+        {% if i.user.userimg != 'False' %}
+
+        <img src="{{ i.user.userimg.url }}" alt="" class="img-fluid text-center mt-2" style="width: 50px; height: 50px; border-radius: 50%; ">
+
+
+        {% else %}
+<img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 50px; height: 50px; border-radius: 50%; ">
+
+        {% endif %}
+
+        <a href="{% url 'showprofile' id=i.user.id %}" class='text-success'>{{i.user.name | capfirst}}</a></b></p> <br>
+    <em class="text-dark"> {{i.dateofpost}}</em>
+    <h1 class="display-5">
+        {{i.postdata}}
+
+        {% if i.postimg != 'False' %}
+        <br>
+   
+        <img src="{{ i.postimg.url }}" alt="" class="img-fluid text-center mt-2" style="width: 250px; height: 250px; ">
+ 
+        
+ 
+          {% endif %}
+    </h1>
+    
+    </div>
+
+
+{% endfor %}
+
+    <div class="container mt-2">
+      <form action="" method="post">
+        {% csrf_token %}
+         <label for="comment">Comment <i class="fas fa-comment"></i></label>
+       <textarea name="comment" id="comment" cols="10" rows="1" class="form-control" placeholder="Write your comment" required></textarea>
+
+       <input type="submit" value="comment" class="btn btn-success mt-2">
+      </form>
+    </div>
+
+    <hr class="text-success">
+
+    <p class='container mt-2'><b>Comments <i class="fas fa-comment"></i> </b></p>
+    <div class="container mt-2 alert alert-info" style='height: 450px; overflow-y:scroll;'>
+
+        {% comment %} all comments will be inside this  {% endcomment %}
+
+        {% if cmt %}
+        
+        {% for i in cmt %}
+        
+
+        <p><b>
+        
+            <em>{{i.dateofpostactivity}}</em>
+            <br>
+            {% if i.user.userimg != 'False' %}
+    
+            <img src="{{ i.user.userimg.url }}" alt="" class="img-fluid text-center mt-1" style="width: 50px; height: 50px; border-radius: 50%; ">
+    
+    
+            {% else %}
+    <img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 50px; height: 50px; border-radius: 50%; ">
+    
+            {% endif %}
+           
+            <a href="{% url 'showprofile' id=i.user.id %}" class='text-success'>{{i.user.name | capfirst}}</a> : {{i.comments}} </b></p> <br>
+
+        
+        
+        {% endfor %}
+
+
+        {% else %}
+        <p><b>No comments yet</b></p>
+        {% endif %}
+
+    </div>
+
+
+
+{% else %}
+
+    <h3 class='container mt-2'>You are not following this user thats why you can not see this post.</h3>
+
+{% endif %}
+
+
+
+{% else %}
+
+<h1 class="display-4">
+    No Post Yet
+</h1>
+
+{% endif %}
+
+{% include 'core/footer.html' %}
+{% endblock content %}

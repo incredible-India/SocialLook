@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 
+{% load static %}
 
 {% block title %}
 
@@ -12,7 +13,179 @@
 
     {% include 'core/nav.html' with p=username  %}
 
+    <div class="container mt-2">
 
+        <div class="row">
+            <div class="col-sm-8">
+
+                {% if upost %}
+                
+                {% for i in upost %}
+                
+                <div class="container alert alert-success mt-2">
+
+
+
+                    <p><b>
+        
+                        {% if i.user.userimg != 'False' %}
+                
+                        <img src="{{ i.user.userimg.url }}" alt="" class="img-fluid text-center mt-1" style="width: 50px; height: 50px; border-radius: 50%; ">
+                
+                
+                        {% else %}
+                <img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 50px; height: 50px; border-radius: 50%; ">
+                
+                        {% endif %}
+                
+                        <a href="{% url 'showprofile' id=i.id %}" class='text-success'>{{i.user.name | capfirst}}</a> </b></p>
+
+                     
+                        <em>{{i.dateofpost}}</em>
+                        <hr>
+
+                        {% if i.postimg != 'False' %}
+                        <br>
+                   
+                        <img src="{{ i.postimg.url }}" alt="" class="img-fluid text-center mt-2" style="width: 250px; height: 250px; ">
+                 
+                        
+                 
+                          {% endif %}
+
+                          <h3 class="display-5 mt-2">{{i.postdata}}</h3>
+
+
+                          <br>
+                          
+                          <p><b><a href="{% url 'postact' id=i.id uid=id %}" class="text-success">Post Activity</a></b></p>
+
+
+                </div>
+                
+                {% endfor %}
+                
+                {% else %}
+
+                <p class=text-center><b>No Post Yet.</b></p>
+                
+                {% endif %}
+
+
+
+                {% if total %}
+                
+                {% for i in total %}
+                
+                {% for j in i %}
+                
+                
+                <div class="container alert alert-success mt-2">
+
+
+
+                    <p><b>
+        
+                        {% if j.user.userimg != 'False' %}
+                
+                        <img src="{{ j.user.userimg.url }}" alt="" class="img-fluid text-center mt-1" style="width: 50px; height: 50px; border-radius: 50%; ">
+                
+                
+                        {% else %}
+                <img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 50px; height: 50px; border-radius: 50%; ">
+                
+                        {% endif %}
+                
+                        <a href="{% url 'showprofile' id=j.id %}" class='text-success'>{{j.user.name | capfirst}}</a> </b></p>
+
+                     
+                        <em>{{j.dateofpost}}</em>
+                        <hr>
+
+                        {% if j.postimg != 'False' %}
+                        <br>
+                   
+                        <img src="{{ j.postimg.url }}" alt="" class="img-fluid text-center mt-2" style="width: 250px; height: 250px; ">
+                 
+                        
+                 
+                          {% endif %}
+
+                          <h3 class="display-5 mt-2">{{j.postdata}}</h3>
+
+
+                          <br>
+                          
+                          <p><b><a href="{% url 'postact' id=j.id uid=j.user.id %}" class="text-success">Post Activity</a></b></p>
+
+
+                </div>
+
+
+
+
+
+
+                
+                {% endfor %}
+                
+                {% endfor %}
+                
+                {% else %}
+
+                <p><b>Follow to other user to see their posts.</b></p>
+                
+                {% endif %}
+
+
+            </div>
+
+
+            <div class="col-sm-4 alert alert-secondary" style='height:500px; overflow-y:scroll;'>
+
+                <p><b> <span class="text-success">People</span> you may know</b></p>
+
+                <div class="container mt-2">
+                    {% if user %}
+                    
+                    {% for i in user %}
+                    
+                   {% if i.id != id %}
+                   <p><b>
+        
+                    {% if i.userimg != 'False' %}
+            
+                    <img src="{{ i.userimg.url }}" alt="" class="img-fluid text-center mt-1" style="width: 50px; height: 50px; border-radius: 50%; ">
+            
+            
+                    {% else %}
+            <img src="{% static 'users/img/bk.svg' %}" alt="" style="width: 50px; height: 50px; border-radius: 50%; ">
+            
+                    {% endif %}
+            
+                    <a href="{% url 'showprofile' id=i.id %}" class='text-success'>{{i.name | capfirst}}</a> </b></p>
+                   {% endif %}
+                    
+                    
+                    {% endfor %}
+
+                    <a href="{% url 'people' %}" class="text-success">See More</a>
+
+
+                    {% else %}
+                    No user Yet
+                    {% endif %}
+
+                    <hr class="text-success">
+
+                    <img src="{% static 'users/img/bk.svg'%}" alt="" class="img-fluid-mt-2 text-center">
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 
     {% include 'core/footer.html' %}
 {% endblock content %}

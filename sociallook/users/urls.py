@@ -43,7 +43,11 @@ urlpatterns = [
     #see the follow list below
 
     path('followlist/',views.followlist.as_view(),name='followlist'),
-    path('followerlist/',views.followerlist.as_view(),name='followerlist')
+    path('followerlist/',views.followerlist.as_view(),name='followerlist'),
+
+    #post activity to
+
+    path('post_activity/<int:id>/<int:uid>/',views.post_activity.as_view(),name='postact')
 
 ]
 

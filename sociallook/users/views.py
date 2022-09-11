@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views import View
 from django.shortcuts import HttpResponse,HttpResponseRedirect
 from django.contrib import messages
-from .models import users,posts,activity
+from .models import users,posts,activity,post_activities
 from django.utils.decorators import method_decorator
 from .middleware  import checkingUserAuthentication
 # Create your views here.
@@ -536,3 +536,64 @@ class followerlist(View):
             })
         else:
             return HttpResponseRedirect('/user/login')
+
+
+
+#post activity activity
+class post_activity(View):
+    def get(self, request,id,uid):
+        if 'email' in request.session:
+            if 'name' in request.session:
+                post = posts.objects.filter(id=id)
+                username = request.session['name']
+
+                #check user exist or not
+
+                isuser = users.objects.filter(id=uid).exists()
+
+                if isuser == False:
+                    return HttpResponse('Invalid request')
+
+
+                if post.exists():
+
+                    #and check user follow or not or post is of user or someone else 
+
+                    postbelong = posts.objects.filter(Q(user = users.objects.get(email = request.session['email'])) & Q(id=id))
+
+                    if postbelong.exists():
+                        #it means post is of user itself
+                        isfollow =True
+                        
+                    
+                    else:
+                        #if this post does not belong to user then check user follow that person or not  
+                        isfollow = activity.objects.filter(Q(whofollow = users.objects.get(email = request.session['email'])) & Q(whomtofollow= users.objects.get(id=uid))).exists()
+
+                    #checking comments on that post     
+
+                    postcomments = post_activities.objects.filter(post = posts.objects.get(id=id))
+              
+                    return render(request, 'users/post_act.html',{
+                        'username':username,'post':post ,'isfollow':isfollow,
+                        'cmt':postcomments})
+                else:
+                    return HttpResponse('Post dose not exist')
+                
+            else:
+                return HttpResponseRedirect('/user/login/')
+        else:
+            return HttpResponseRedirect('/user/login/')
+    
+
+    def post(self, request,id,uid):
+        cmt = request.POST.get('comment')
+
+        if cmt.strip() == '':
+            messages.info(request,'You should write somthing in comment box..')
+            
+        else:
+
+            post_activities.objects.create(user = users.objects.get(email = request.session['email']),post = posts.objects.get(id=id),comments = cmt)
+        
+        return HttpResponseRedirect(f'/user/post_activity/{id}/{uid}/')
